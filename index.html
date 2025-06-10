@@ -175,11 +175,11 @@
       font-size: 1.4rem;
     }
     
-    /* Contenedor del PDF - ¡AJUSTE CLAVE! */
+    /* Contenedor del PDF */
     .iframe-container {
       flex: 1;
       width: 100%;
-      height: calc(100vh - 120px); /* 100% del viewport menos header y botones */
+      height: calc(100vh - 120px);
     }
     
     iframe {
@@ -221,14 +221,14 @@
       background-color: #0077ed;
     }
     
-    .back-button {
+    .reset-button {
       background-color: transparent;
-      color: #0071e3;
-      border: 1px solid #d2d2d7;
+      color: #ff3b30;
+      border: 1px solid #ff3b30;
     }
     
-    .back-button:hover {
-      background-color: rgba(0, 113, 227, 0.1);
+    .reset-button:hover {
+      background-color: rgba(255, 59, 48, 0.1);
     }
   </style>
 </head>
@@ -255,14 +255,14 @@
     
     <div class="iframe-container">
       <iframe 
-        id="formulario" 
+        id="formularioPdf" 
         src="Service_Expert_Formulario.pdf" 
         title="Formulario Service Expert PDF"
       ></iframe>
     </div>
     
     <div class="action-buttons">
-      <button class="action-button back-button" onclick="showWelcome()">Volver</button>
+      <button class="action-button reset-button" onclick="resetearFormulario()">Resetear Campos</button>
       <button class="action-button print-button" onclick="imprimirFormulario()">Imprimir</button>
     </div>
   </div>
@@ -307,11 +307,62 @@
       }, 500);
     }
     
-    // Volver a bienvenida (oculta formulario)
-    function showWelcome() {
-      document.getElementById('formPage').style.display = 'none';
-      document.getElementById('welcomePage').style.display = 'flex';
-      document.getElementById('welcomePage').style.animation = 'fadeIn 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards';
+    // Función mejorada para resetear el formulario PDF
+    function resetearFormulario() {
+      const iframe = document.getElementById('formularioPdf');
+      const pdfUrl = iframe.src.split('#')[0]; // Obtener URL sin fragmentos
+      
+      // Método 1: Intentar usar la API de PDF.js si está disponible
+      try {
+        if (iframe.contentWindow.PDFViewerApplication) {
+          iframe.contentWindow.PDFViewerApplication.findController.executeCommand('resetForm');
+          showResetConfirmation();
+          return;
+        }
+      } catch (e) {}
+      
+      // Método 2: Recargar el iframe con un parámetro aleatorio para forzar recarga
+      iframe.src = pdfUrl + '?reset=' + Date.now();
+      
+      // Método 3: Mostrar confirmación visual
+      showResetConfirmation();
+    }
+    
+    // Mostrar confirmación de reseteo
+    function showResetConfirmation() {
+      const confirmation = document.createElement('div');
+      confirmation.textContent = '✓ Campos reseteados';
+      confirmation.style.position = 'fixed';
+      confirmation.style.bottom = '80px';
+      confirmation.style.left = '50%';
+      confirmation.style.transform = 'translateX(-50%)';
+      confirmation.style.backgroundColor = '#34c759';
+      confirmation.style.color = 'white';
+      confirmation.style.padding = '10px 20px';
+      confirmation.style.borderRadius = '50px';
+      confirmation.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+      confirmation.style.zIndex = '1000';
+      confirmation.style.animation = 'fadeInOut 2s ease forwards';
+      
+      document.body.appendChild(confirmation);
+      
+      // Crear animación de fade in/out
+      const style = document.createElement('style');
+      style.innerHTML = `
+        @keyframes fadeInOut {
+          0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+          20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+          80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+          100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      // Eliminar el mensaje después de la animación
+      setTimeout(() => {
+        confirmation.remove();
+        style.remove();
+      }, 2000);
     }
     
     // Imprimir PDF
