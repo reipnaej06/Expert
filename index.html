@@ -17,7 +17,7 @@
       overflow-x: hidden;
     }
     
-    /* Página de bienvenida (visible por defecto) */
+    /* Página de bienvenida */
     #welcomePage {
       position: fixed;
       top: 0;
@@ -31,19 +31,12 @@
       background: linear-gradient(135deg, #0a74da 0%, #095bb5 100%);
       color: white;
       z-index: 1000;
-      transition: opacity 0.5s ease;
       padding: 20px;
       text-align: center;
     }
     
     .welcome-content {
       max-width: 600px;
-      animation: fadeIn 0.8s ease;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
     }
     
     .welcome-title {
@@ -70,17 +63,11 @@
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
     
-    .next-button:hover {
-      background-color: #f0f0f0;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-    }
-    
-    /* Página del formulario (oculta inicialmente) */
+    /* Página del formulario */
     #formPage {
       display: none;
       width: 100%;
-      min-height: 100vh;
+      height: 100vh;
       flex-direction: column;
     }
     
@@ -89,15 +76,13 @@
       color: white;
       padding: 12px;
       text-align: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
     }
     
+    /* Contenedor del PDF - ¡AJUSTE CLAVE! */
     .iframe-container {
       flex: 1;
       width: 100%;
-      height: calc(100vh - 120px);
+      height: calc(100vh - 120px); /* 100% del viewport menos header y botones */
     }
     
     iframe {
@@ -106,6 +91,7 @@
       border: none;
     }
     
+    /* Botones flotantes abajo */
     .action-buttons {
       position: fixed;
       bottom: 0;
@@ -125,7 +111,6 @@
       border: none;
       cursor: pointer;
       font-weight: bold;
-      transition: all 0.2s;
     }
     
     .print-button {
@@ -133,36 +118,9 @@
       color: white;
     }
     
-    .print-button:hover {
-      background-color: #095bb5;
-    }
-    
     .back-button {
       background-color: #f0f0f0;
       color: #333;
-    }
-    
-    .back-button:hover {
-      background-color: #e0e0e0;
-    }
-    
-    @media (max-width: 768px) {
-      .welcome-title {
-        font-size: 1.8rem;
-      }
-      
-      .welcome-text {
-        font-size: 1rem;
-      }
-      
-      .next-button {
-        padding: 10px 25px;
-        font-size: 0.9rem;
-      }
-      
-      .iframe-container {
-        height: calc(100vh - 110px);
-      }
     }
   </style>
 </head>
@@ -173,8 +131,6 @@
       <h1 class="welcome-title">Bienvenido al Formulario</h1>
       <p class="welcome-text">
         Complete el siguiente formulario con sus datos personales y la información del dispositivo que requiere servicio.
-        <br><br>
-        Al finalizar, podrá imprimirlo o guardarlo como PDF.
       </p>
       <button class="next-button" onclick="showForm()">Comenzar</button>
     </div>
@@ -201,44 +157,28 @@
   </div>
 
   <script>
-    // Mostrar formulario
+    // Mostrar formulario (oculta bienvenida)
     function showForm() {
       document.getElementById('welcomePage').style.display = 'none';
       document.getElementById('formPage').style.display = 'flex';
-      // Ajustar altura del iframe dinámicamente
-      updateIframeHeight();
     }
     
-    // Volver a la página de bienvenida
+    // Volver a bienvenida (oculta formulario)
     function showWelcome() {
       document.getElementById('formPage').style.display = 'none';
       document.getElementById('welcomePage').style.display = 'flex';
     }
     
-    // Imprimir formulario
+    // Imprimir PDF
     function imprimirFormulario() {
       const pdfWindow = window.open('Service_Expert_Formulario.pdf', '_blank');
       pdfWindow.onload = function() {
-        setTimeout(() => {
-          pdfWindow.print();
-        }, 500);
+        pdfWindow.print();
       };
     }
     
-    // Ajustar altura del iframe
-    function updateIframeHeight() {
-      const headerHeight = document.querySelector('.form-header').offsetHeight;
-      const buttonsHeight = document.querySelector('.action-buttons').offsetHeight;
-      const iframeContainer = document.querySelector('.iframe-container');
-      iframeContainer.style.height = `calc(100vh - ${headerHeight + buttonsHeight}px)`;
-    }
-    
-    // Ajustar al cambiar tamaño de ventana
-    window.addEventListener('resize', updateIframeHeight);
-    
-    // Inicialización
+    // Inicialización: Mostrar solo bienvenida al cargar
     document.addEventListener('DOMContentLoaded', function() {
-      // Forzar mostrar solo la página de bienvenida al cargar
       document.getElementById('welcomePage').style.display = 'flex';
       document.getElementById('formPage').style.display = 'none';
     });
