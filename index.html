@@ -3,26 +3,90 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formulario Service Expert</title>
+  <title>Service Expert - Formulario</title>
   <style>
+    /* Estilos generales */
     body {
       margin: 0;
       padding: 0;
       font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
+      background-color: #f5f5f5;
+      color: #333;
     }
-    header {
+    
+    /* Página de bienvenida */
+    .welcome-page {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      background: linear-gradient(135deg, #0a74da 0%, #095bb5 100%);
+      color: white;
+      padding: 20px;
+    }
+    
+    .welcome-content {
+      max-width: 600px;
+    }
+    
+    .welcome-logo {
+      width: 150px;
+      margin-bottom: 20px;
+    }
+    
+    .welcome-title {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+    
+    .welcome-text {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+    
+    .next-button {
+      background-color: white;
+      color: #0a74da;
+      padding: 12px 30px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .next-button:hover {
+      background-color: #f0f0f0;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+    
+    /* Página del formulario (oculta inicialmente) */
+    .form-page {
+      display: none;
+      height: 100vh;
+      flex-direction: column;
+    }
+    
+    .form-header {
       background-color: #0a74da;
       color: white;
       padding: 10px;
       text-align: center;
     }
+    
     .iframe-container {
+      flex: 1;
       padding: 10px;
       max-width: 100%;
       margin: 0;
-      height: calc(100vh - 120px); /* Ajuste dinámico */
     }
+    
     iframe {
       width: 100%;
       height: 100%;
@@ -30,6 +94,17 @@
       display: block;
       background: white;
     }
+    
+    .pdf-link {
+      text-align: center;
+      margin-top: 5px;
+      font-size: 12px;
+      position: fixed;
+      bottom: 40px;
+      left: 0;
+      right: 0;
+    }
+    
     .boton-imprimir {
       margin: 10px auto;
       display: block;
@@ -47,57 +122,82 @@
       transform: translateX(-50%);
       z-index: 100;
     }
+    
     .boton-imprimir:hover {
       background-color: #095bb5;
     }
-    .pdf-link {
-      text-align: center;
-      margin-top: 5px;
-      font-size: 12px;
-      position: fixed;
-      bottom: 40px;
-      left: 0;
-      right: 0;
-    }
+    
     @media (max-width: 768px) {
-      header {
-        padding: 8px;
+      .welcome-title {
+        font-size: 2rem;
       }
-      .iframe-container {
-        height: calc(100vh - 100px);
-        padding: 5px;
+      
+      .welcome-text {
+        font-size: 1rem;
       }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1 style="margin: 0; font-size: 1.2rem;">Formulario Service Expert</h1>
-  </header>
-
-  <div class="iframe-container">
-    <iframe 
-      id="formulario" 
-      src="Service_Expert_Formulario.pdf" 
-      title="Formulario Service Expert PDF"
-    ></iframe>
-    <p class="pdf-link">
-      <a href="Service_Expert_Formulario.pdf" target="_blank" style="color: #0a74da; text-decoration: none;">
-        Abrir PDF en nueva pestaña
-      </a>
-    </p>
+  <!-- Página de bienvenida -->
+  <div class="welcome-page" id="welcomePage">
+    <div class="welcome-content">
+      <!-- Cambia la ruta de la imagen por tu logo -->
+      <img src="logo.png" alt="Logo Service Expert" class="welcome-logo">
+      <h1 class="welcome-title">Bienvenido al Formulario Service Expert</h1>
+      <p class="welcome-text">
+        Por favor complete el siguiente formulario con sus datos personales y la información del dispositivo que requiere servicio.
+        <br><br>
+        Al finalizar, podrá imprimirlo o guardarlo como PDF.
+      </p>
+      <button class="next-button" onclick="showForm()">Siguiente</button>
+    </div>
   </div>
 
-  <button class="boton-imprimir" onclick="imprimirFormulario()">Imprimir Formulario</button>
+  <!-- Página del formulario (oculta inicialmente) -->
+  <div class="form-page" id="formPage">
+    <div class="form-header">
+      <h1 style="margin: 0; font-size: 1.2rem;">Formulario Service Expert</h1>
+    </div>
+
+    <div class="iframe-container">
+      <iframe 
+        id="formulario" 
+        src="Service_Expert_Formulario.pdf" 
+        title="Formulario Service Expert PDF"
+      ></iframe>
+      <p class="pdf-link">
+        <a href="Service_Expert_Formulario.pdf" target="_blank" style="color: white; text-decoration: none;">
+          Abrir PDF en nueva pestaña
+        </a>
+      </p>
+    </div>
+
+    <button class="boton-imprimir" onclick="imprimirFormulario()">Imprimir Formulario</button>
+  </div>
 
   <script>
+    // Mostrar formulario al hacer clic en "Siguiente"
+    function showForm() {
+      document.getElementById('welcomePage').style.display = 'none';
+      document.getElementById('formPage').style.display = 'flex';
+    }
+    
+    // Función para imprimir
     function imprimirFormulario() {
       const pdfUrl = "Service_Expert_Formulario.pdf";
       const win = window.open(pdfUrl, "_blank");
       win.onload = function() {
-        setTimeout(() => win.print(), 500); // Retardo para carga segura
+        setTimeout(() => win.print(), 500);
       };
     }
+    
+    // Opcional: Si quieres que el formulario ocupe todo el espacio disponible
+    window.onload = function() {
+      const iframeContainer = document.querySelector('.iframe-container');
+      const headerHeight = document.querySelector('.form-header').offsetHeight;
+      iframeContainer.style.height = `calc(100vh - ${headerHeight}px)`;
+    };
   </script>
 </body>
 </html>
