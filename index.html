@@ -13,11 +13,12 @@
     }
     
     body {
-      font-family: Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
     
-    /* Página de bienvenida */
+    /* Página de bienvenida - Estilo Apple */
     #welcomePage {
       position: fixed;
       top: 0;
@@ -28,39 +29,129 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(135deg, #0a74da 0%, #095bb5 100%);
-      color: white;
+      background: linear-gradient(160deg, #f5f5f7 0%, #ffffff 100%);
+      color: #1d1d1f;
       z-index: 1000;
       padding: 20px;
       text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    }
+    
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     
     .welcome-content {
       max-width: 600px;
+      padding: 40px;
+      background-color: rgba(255, 255, 255, 0.85);
+      border-radius: 18px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.3);
     }
     
     .welcome-title {
-      font-size: 2.2rem;
+      font-size: 2.4rem;
       margin-bottom: 20px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #000000, #333333);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
     
     .welcome-text {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       margin-bottom: 30px;
       line-height: 1.6;
+      color: #86868b;
+      font-weight: 400;
     }
     
     .next-button {
-      background-color: white;
-      color: #0a74da;
-      padding: 12px 30px;
-      font-size: 1rem;
+      background-color: #0071e3;
+      color: white;
+      padding: 14px 35px;
+      font-size: 1.1rem;
       border: none;
       border-radius: 50px;
       cursor: pointer;
-      transition: all 0.3s;
-      font-weight: bold;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+      font-weight: 500;
+      box-shadow: 0 4px 20px rgba(0, 113, 227, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .next-button:hover {
+      background-color: #0077ed;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(0, 113, 227, 0.4);
+    }
+    
+    .next-button:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 15px rgba(0, 113, 227, 0.3);
+    }
+    
+    .next-button::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      border-radius: 100%;
+      transform: scale(1, 1) translate(-50%, -50%);
+      transform-origin: 50% 50%;
+    }
+    
+    .next-button:focus:not(:active)::after {
+      animation: ripple 0.6s ease-out;
+    }
+    
+    @keyframes ripple {
+      0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(20, 20);
+        opacity: 0;
+      }
+    }
+    
+    /* Apple-like floating dots decoration */
+    .dots-decoration {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    .dot {
+      position: absolute;
+      background: rgba(0, 122, 255, 0.1);
+      border-radius: 50%;
+      animation: float 15s infinite linear;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(0deg);
+      }
+      100% {
+        transform: translateY(-100vh) rotate(360deg);
+      }
     }
     
     /* Página del formulario */
@@ -72,10 +163,16 @@
     }
     
     .form-header {
-      background-color: #0a74da;
-      color: white;
-      padding: 12px;
+      background-color: #f5f5f7;
+      color: #1d1d1f;
+      padding: 15px;
       text-align: center;
+      border-bottom: 1px solid #d2d2d7;
+    }
+    
+    .form-header h1 {
+      font-weight: 500;
+      font-size: 1.4rem;
     }
     
     /* Contenedor del PDF - ¡AJUSTE CLAVE! */
@@ -97,36 +194,50 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: white;
-      padding: 10px;
+      background: #f5f5f7;
+      padding: 15px;
       display: flex;
       justify-content: center;
       gap: 15px;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+      border-top: 1px solid #d2d2d7;
     }
     
     .action-button {
-      padding: 8px 20px;
-      border-radius: 4px;
+      padding: 10px 25px;
+      border-radius: 50px;
       border: none;
       cursor: pointer;
-      font-weight: bold;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
     
     .print-button {
-      background-color: #0a74da;
+      background-color: #0071e3;
       color: white;
     }
     
+    .print-button:hover {
+      background-color: #0077ed;
+    }
+    
     .back-button {
-      background-color: #f0f0f0;
-      color: #333;
+      background-color: transparent;
+      color: #0071e3;
+      border: 1px solid #d2d2d7;
+    }
+    
+    .back-button:hover {
+      background-color: rgba(0, 113, 227, 0.1);
     }
   </style>
 </head>
 <body>
   <!-- Página de bienvenida -->
   <div id="welcomePage">
+    <!-- Decoración de puntos flotantes -->
+    <div class="dots-decoration" id="dotsContainer"></div>
+    
     <div class="welcome-content">
       <h1 class="welcome-title">Bienvenido al Formulario</h1>
       <p class="welcome-text">
@@ -157,16 +268,50 @@
   </div>
 
   <script>
+    // Crear puntos decorativos
+    function createDots() {
+      const container = document.getElementById('dotsContainer');
+      const dotCount = 12;
+      
+      for (let i = 0; i < dotCount; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        
+        // Tamaño aleatorio entre 5 y 15px
+        const size = Math.random() * 10 + 5;
+        dot.style.width = `${size}px`;
+        dot.style.height = `${size}px`;
+        
+        // Posición aleatoria
+        dot.style.left = `${Math.random() * 100}%`;
+        dot.style.top = `${Math.random() * 100}%`;
+        
+        // Opacidad aleatoria
+        dot.style.opacity = Math.random() * 0.4 + 0.1;
+        
+        // Animación diferente para cada punto
+        dot.style.animationDuration = `${Math.random() * 10 + 10}s`;
+        dot.style.animationDelay = `${Math.random() * 5}s`;
+        
+        container.appendChild(dot);
+      }
+    }
+    
     // Mostrar formulario (oculta bienvenida)
     function showForm() {
-      document.getElementById('welcomePage').style.display = 'none';
-      document.getElementById('formPage').style.display = 'flex';
+      document.getElementById('welcomePage').style.opacity = '1';
+      document.getElementById('welcomePage').style.animation = 'fadeOut 0.5s ease forwards';
+      setTimeout(() => {
+        document.getElementById('welcomePage').style.display = 'none';
+        document.getElementById('formPage').style.display = 'flex';
+      }, 500);
     }
     
     // Volver a bienvenida (oculta formulario)
     function showWelcome() {
       document.getElementById('formPage').style.display = 'none';
       document.getElementById('welcomePage').style.display = 'flex';
+      document.getElementById('welcomePage').style.animation = 'fadeIn 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards';
     }
     
     // Imprimir PDF
@@ -177,10 +322,21 @@
       };
     }
     
-    // Inicialización: Mostrar solo bienvenida al cargar
+    // Inicialización
     document.addEventListener('DOMContentLoaded', function() {
+      createDots();
       document.getElementById('welcomePage').style.display = 'flex';
       document.getElementById('formPage').style.display = 'none';
+      
+      // Agregar keyframes dinámicamente para fadeOut
+      const style = document.createElement('style');
+      style.innerHTML = `
+        @keyframes fadeOut {
+          from { opacity: 1; transform: translateY(0); }
+          to { opacity: 0; transform: translateY(-20px); }
+        }
+      `;
+      document.head.appendChild(style);
     });
   </script>
 </body>
