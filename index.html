@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulario Service Expert</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+    header {
+      background-color: #0a74da;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    .iframe-container {
+      padding: 20px;
+    }
+    iframe {
+      width: 100%;
+      height: 90vh;
+      border: none;
+    }
+    .boton-imprimir {
+      margin: 10px auto;
+      display: block;
+      background-color: #0a74da;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .boton-imprimir:hover {
+      background-color: #095bb5;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Formulario Interactivo - Service Expert</h1>
+  </header>
+
+  <div class="iframe-container">
+    <iframe id="formulario" src="Service_Expert_Formulario.pdf"></iframe>
+    <button class="boton-imprimir" onclick="imprimirFormulario()">Imprimir Formulario</button>
+  </div>
+
+  <script>
+    function imprimirFormulario() {
+      const iframe = document.getElementById('formulario');
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    }
+  </script>
+</body>
+</html>
