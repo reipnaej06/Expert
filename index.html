@@ -1,8 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Formulario Service Expert</title>
   <style>
     body {
@@ -19,14 +19,18 @@
     }
     .iframe-container {
       padding: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
     }
     iframe {
       width: 100%;
-      height: 90vh;
+      height: 80vh;
       border: none;
+      display: block;
+      margin: 0 auto;
     }
     .boton-imprimir {
-      margin: 10px auto;
+      margin: 20px auto;
       display: block;
       background-color: #0a74da;
       color: white;
@@ -35,9 +39,20 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      transition: background-color 0.3s;
     }
     .boton-imprimir:hover {
       background-color: #095bb5;
+    }
+    .pdf-link {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    @media (max-width: 768px) {
+      iframe {
+        height: 500px;
+      }
     }
   </style>
 </head>
@@ -47,15 +62,25 @@
   </header>
 
   <div class="iframe-container">
-    <iframe id="formulario" src="Service_Expert_Formulario.pdf"></iframe>
+    <iframe 
+      id="formulario" 
+      src="Service_Expert_Formulario.pdf" 
+      title="Formulario Service Expert PDF"
+    ></iframe>
+    <p class="pdf-link">
+      Si no ves el PDF, <a href="Service_Expert_Formulario.pdf" target="_blank">ábrelo aquí</a>.
+    </p>
     <button class="boton-imprimir" onclick="imprimirFormulario()">Imprimir Formulario</button>
   </div>
 
   <script>
     function imprimirFormulario() {
-      const iframe = document.getElementById('formulario');
-      iframe.contentWindow.focus();
-      iframe.contentWindow.print();
+      // Método mejorado compatible con GitHub Pages
+      const pdfUrl = "Service_Expert_Formulario.pdf";
+      const win = window.open(pdfUrl, "_blank");
+      win.onload = function() {
+        win.print();
+      };
     }
   </script>
 </body>
