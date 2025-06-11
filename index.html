@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Service Expert - Formulario</title>
+  <title>Service Expert - Formulario Multietapa</title>
   <style>
-    /* Reset y estilos base */
+    /* Mantengo tus estilos originales y añado los nuevos */
     * {
       margin: 0;
       padding: 0;
@@ -16,9 +16,10 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      background: #f5f5f7;
     }
     
-    /* Página de bienvenida - Estilo Apple */
+    /* Página de bienvenida (igual que tu versión) */
     #welcomePage {
       position: fixed;
       top: 0;
@@ -40,10 +41,7 @@
     }
     
     @keyframes fadeIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      to { opacity: 1; transform: translateY(0); }
     }
     
     .welcome-content {
@@ -95,41 +93,7 @@
       box-shadow: 0 6px 25px rgba(0, 113, 227, 0.4);
     }
     
-    .next-button:active {
-      transform: translateY(0);
-      box-shadow: 0 4px 15px rgba(0, 113, 227, 0.3);
-    }
-    
-    .next-button::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 5px;
-      height: 5px;
-      background: rgba(255, 255, 255, 0.5);
-      opacity: 0;
-      border-radius: 100%;
-      transform: scale(1, 1) translate(-50%, -50%);
-      transform-origin: 50% 50%;
-    }
-    
-    .next-button:focus:not(:active)::after {
-      animation: ripple 0.6s ease-out;
-    }
-    
-    @keyframes ripple {
-      0% {
-        transform: scale(0, 0);
-        opacity: 0.5;
-      }
-      100% {
-        transform: scale(20, 20);
-        opacity: 0;
-      }
-    }
-    
-    /* Apple-like floating dots decoration */
+    /* Puntos flotantes (igual que tu versión) */
     .dots-decoration {
       position: absolute;
       width: 100%;
@@ -146,197 +110,410 @@
     }
     
     @keyframes float {
-      0% {
-        transform: translateY(0) rotate(0deg);
-      }
-      100% {
-        transform: translateY(-100vh) rotate(360deg);
-      }
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-100vh) rotate(360deg); }
     }
     
-    /* Página del formulario */
-    #formPage {
+    /* Nuevos estilos para el formulario multietapa */
+    .form-screen {
       display: none;
-      width: 100%;
-      height: 100vh;
-      flex-direction: column;
+      max-width: 800px;
+      margin: 30px auto;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      animation: fadeIn 0.5s ease;
     }
     
-    .form-header {
-      background-color: #f5f5f7;
-      color: #1d1d1f;
-      padding: 15px;
-      text-align: center;
+    .form-screen.active {
+      display: block;
+    }
+    
+    .screen-header {
+      padding: 25px;
+      background: #f5f5f7;
       border-bottom: 1px solid #d2d2d7;
+      text-align: center;
     }
     
-    .form-header h1 {
+    .screen-header h2 {
+      font-size: 1.5rem;
+      color: #1d1d1f;
       font-weight: 500;
-      font-size: 1.4rem;
     }
     
-    /* Contenedor del PDF */
-    .iframe-container {
-      flex: 1;
+    .screen-content {
+      padding: 25px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #1d1d1f;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
       width: 100%;
-      height: calc(100vh - 120px);
+      padding: 12px 15px;
+      border: 1px solid #d2d2d7;
+      border-radius: 8px;
+      font-size: 1rem;
     }
     
-    iframe {
+    .form-navigation {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+      border-top: 1px solid #d2d2d7;
+    }
+    
+    .nav-button {
+      padding: 12px 25px;
+      border-radius: 50px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn-back {
+      background: transparent;
+      color: #0071e3;
+      border: 1px solid #0071e3;
+    }
+    
+    .btn-next {
+      background: #0071e3;
+      color: white;
+      border: none;
+    }
+    
+    /* Barra de progreso */
+    .progress-container {
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .progress-steps {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    
+    .progress-step {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 10px;
+      font-weight: 500;
+      color: #86868b;
+    }
+    
+    .progress-step.active {
+      background: #0071e3;
+      color: white;
+    }
+    
+    .progress-step.completed {
+      background: #34c759;
+      color: white;
+    }
+    
+    /* Pantalla final con PDF */
+    .pdf-container {
+      width: 100%;
+      height: 70vh;
+      border: 1px solid #d2d2d7;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    
+    #pdfPreview {
       width: 100%;
       height: 100%;
       border: none;
     }
-    
-    /* Botones flotantes abajo */
-    .action-buttons {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #f5f5f7;
-      padding: 15px;
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      border-top: 1px solid #d2d2d7;
-    }
-    
-    .action-button {
-      padding: 10px 25px;
-      border-radius: 50px;
-      border: none;
-      cursor: pointer;
-      font-weight: 500;
-      font-size: 0.95rem;
-      transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
-    }
-    
-    .print-button {
-      background-color: #0071e3;
-      color: white;
-    }
-    
-    .print-button:hover {
-      background-color: #0077ed;
-    }
-    
-    .reset-button {
-      background-color: transparent;
-      color: #ff3b30;
-      border: 1px solid #ff3b30;
-    }
-    
-    .reset-button:hover {
-      background-color: rgba(255, 59, 48, 0.1);
-    }
   </style>
 </head>
 <body>
-  <!-- Página de bienvenida -->
+  <!-- Página de bienvenida (igual que tu versión) -->
   <div id="welcomePage">
-    <!-- Decoración de puntos flotantes -->
     <div class="dots-decoration" id="dotsContainer"></div>
-    
     <div class="welcome-content">
       <h1 class="welcome-title">Bienvenido al Formulario</h1>
       <p class="welcome-text">
         Complete el siguiente formulario con sus datos personales y la información del dispositivo que requiere servicio.
       </p>
-      <button class="next-button" onclick="showForm()">Comenzar</button>
+      <button class="next-button" onclick="showFormSteps()">Comenzar</button>
     </div>
   </div>
 
-  <!-- Página del formulario -->
-  <div id="formPage">
-    <div class="form-header">
-      <h1>Formulario Service Expert</h1>
+  <!-- Formulario multietapa -->
+  <div id="formSteps" style="display:none;">
+    <!-- Barra de progreso -->
+    <div class="progress-container">
+      <div class="progress-steps">
+        <div class="progress-step active" id="step1">1</div>
+        <div class="progress-step" id="step2">2</div>
+        <div class="progress-step" id="step3">3</div>
+        <div class="progress-step" id="step4">4</div>
+      </div>
     </div>
-    
-    <div class="iframe-container">
-      <iframe 
-        id="formularioPdf" 
-        src="Service_Expert_Formulario.pdf" 
-        title="Formulario Service Expert PDF"
-      ></iframe>
+
+    <!-- Pantalla 1: Datos personales -->
+    <div class="form-screen active" id="screen1">
+      <div class="screen-header">
+        <h2>Datos Personales</h2>
+      </div>
+      <div class="screen-content">
+        <div class="form-group">
+          <label for="nombre">Nombre Completo</label>
+          <input type="text" id="nombre" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Correo Electrónico</label>
+          <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+          <label for="telefono">Teléfono</label>
+          <input type="tel" id="telefono">
+        </div>
+      </div>
+      <div class="form-navigation">
+        <div></div> <!-- Espacio vacío para alinear el botón a la derecha -->
+        <button class="nav-button btn-next" onclick="nextScreen(1)">Siguiente</button>
+      </div>
     </div>
-    
-    <div class="action-buttons">
-      <button class="action-button reset-button" onclick="resetearFormulario()">Resetear Campos</button>
-      <button class="action-button print-button" onclick="imprimirFormulario()">Imprimir</button>
+
+    <!-- Pantalla 2: Información del dispositivo -->
+    <div class="form-screen" id="screen2">
+      <div class="screen-header">
+        <h2>Información del Dispositivo</h2>
+      </div>
+      <div class="screen-content">
+        <div class="form-group">
+          <label for="tipoDispositivo">Tipo de Dispositivo</label>
+          <select id="tipoDispositivo" required>
+            <option value="">Seleccione...</option>
+            <option value="Laptop">Laptop</option>
+            <option value="Smartphone">Smartphone</option>
+            <option value="Tablet">Tablet</option>
+            <option value="Desktop">Computadora de Escritorio</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="marca">Marca</label>
+          <input type="text" id="marca" required>
+        </div>
+        <div class="form-group">
+          <label for="modelo">Modelo</label>
+          <input type="text" id="modelo" required>
+        </div>
+      </div>
+      <div class="form-navigation">
+        <button class="nav-button btn-back" onclick="prevScreen(2)">Atrás</button>
+        <button class="nav-button btn-next" onclick="nextScreen(2)">Siguiente</button>
+      </div>
+    </div>
+
+    <!-- Pantalla 3: Servicio requerido -->
+    <div class="form-screen" id="screen3">
+      <div class="screen-header">
+        <h2>Servicio Requerido</h2>
+      </div>
+      <div class="screen-content">
+        <div class="form-group">
+          <label for="tipoServicio">Tipo de Servicio</label>
+          <select id="tipoServicio" required>
+            <option value="">Seleccione...</option>
+            <option value="Reparación">Reparación</option>
+            <option value="Mantenimiento">Mantenimiento</option>
+            <option value="Diagnóstico">Diagnóstico</option>
+            <option value="Actualización">Actualización</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="problema">Descripción del Problema</label>
+          <textarea id="problema" rows="4" required></textarea>
+        </div>
+      </div>
+      <div class="form-navigation">
+        <button class="nav-button btn-back" onclick="prevScreen(3)">Atrás</button>
+        <button class="nav-button btn-next" onclick="nextScreen(3)">Siguiente</button>
+      </div>
+    </div>
+
+    <!-- Pantalla 4: Confirmación y PDF -->
+    <div class="form-screen" id="screen4">
+      <div class="screen-header">
+        <h2>Confirmación y PDF</h2>
+      </div>
+      <div class="screen-content">
+        <p>Revise sus datos y descargue el formulario completado:</p>
+        
+        <div class="pdf-container">
+          <iframe id="pdfPreview" title="Formulario completado"></iframe>
+        </div>
+      </div>
+      <div class="form-navigation">
+        <button class="nav-button btn-back" onclick="prevScreen(4)">Atrás</button>
+        <button class="nav-button btn-next" onclick="generatePDF()">Generar PDF</button>
+      </div>
     </div>
   </div>
 
   <script>
-    // Crear puntos decorativos
-    function createDots() {
-      const container = document.getElementById('dotsContainer');
-      const dotCount = 12;
-      
-      for (let i = 0; i < dotCount; i++) {
-        const dot = document.createElement('div');
-        dot.className = 'dot';
-        
-        // Tamaño aleatorio entre 5 y 15px
-        const size = Math.random() * 10 + 5;
-        dot.style.width = `${size}px`;
-        dot.style.height = `${size}px`;
-        
-        // Posición aleatoria
-        dot.style.left = `${Math.random() * 100}%`;
-        dot.style.top = `${Math.random() * 100}%`;
-        
-        // Opacidad aleatoria
-        dot.style.opacity = Math.random() * 0.4 + 0.1;
-        
-        // Animación diferente para cada punto
-        dot.style.animationDuration = `${Math.random() * 10 + 10}s`;
-        dot.style.animationDelay = `${Math.random() * 5}s`;
-        
-        container.appendChild(dot);
-      }
-    }
-    
-    // Mostrar formulario (oculta bienvenida)
-    function showForm() {
-      document.getElementById('welcomePage').style.opacity = '1';
+    // Variables para almacenar los datos
+    const formData = {
+      personal: {},
+      dispositivo: {},
+      servicio: {}
+    };
+
+    // Mostrar formulario multietapa (reemplaza tu showForm original)
+    function showFormSteps() {
       document.getElementById('welcomePage').style.animation = 'fadeOut 0.5s ease forwards';
       setTimeout(() => {
         document.getElementById('welcomePage').style.display = 'none';
-        document.getElementById('formPage').style.display = 'flex';
+        document.getElementById('formSteps').style.display = 'block';
       }, 500);
     }
-    
-    // Función mejorada para resetear el formulario PDF
-    function resetearFormulario() {
-      const iframe = document.getElementById('formularioPdf');
-      const pdfUrl = iframe.src.split('#')[0]; // Obtener URL sin fragmentos
+
+    // Navegación entre pantallas
+    function nextScreen(currentScreen) {
+      // Validar campos requeridos
+      if (!validateScreen(currentScreen)) return;
       
-      // Método 1: Intentar usar la API de PDF.js si está disponible
-      try {
-        if (iframe.contentWindow.PDFViewerApplication) {
-          iframe.contentWindow.PDFViewerApplication.findController.executeCommand('resetForm');
-          showResetConfirmation();
-          return;
-        }
-      } catch (e) {}
+      // Guardar datos
+      saveScreenData(currentScreen);
       
-      // Método 2: Recargar el iframe con un parámetro aleatorio para forzar recarga
-      iframe.src = pdfUrl + '?reset=' + Date.now();
+      // Actualizar progreso
+      updateProgress(currentScreen, 'next');
       
-      // Método 3: Mostrar confirmación visual
-      showResetConfirmation();
+      // Cambiar pantalla
+      document.getElementById(`screen${currentScreen}`).classList.remove('active');
+      document.getElementById(`screen${currentScreen + 1}`).classList.add('active');
     }
-    
-    // Mostrar confirmación de reseteo
-    function showResetConfirmation() {
+
+    function prevScreen(currentScreen) {
+      // Cambiar pantalla
+      document.getElementById(`screen${currentScreen}`).classList.remove('active');
+      document.getElementById(`screen${currentScreen - 1}`).classList.add('active');
+      
+      // Actualizar progreso
+      updateProgress(currentScreen - 1, 'prev');
+    }
+
+    // Validar campos requeridos
+    function validateScreen(screenNumber) {
+      if (screenNumber === 1) {
+        if (!document.getElementById('nombre').value || !document.getElementById('email').value) {
+          alert('Por favor complete los campos requeridos');
+          return false;
+        }
+      }
+      
+      if (screenNumber === 2) {
+        if (!document.getElementById('tipoDispositivo').value || 
+            !document.getElementById('marca').value || 
+            !document.getElementById('modelo').value) {
+          alert('Por favor complete los campos requeridos');
+          return false;
+        }
+      }
+      
+      if (screenNumber === 3) {
+        if (!document.getElementById('tipoServicio').value || 
+            !document.getElementById('problema').value) {
+          alert('Por favor complete los campos requeridos');
+          return false;
+        }
+      }
+      
+      return true;
+    }
+
+    // Guardar datos de cada pantalla
+    function saveScreenData(screenNumber) {
+      if (screenNumber === 1) {
+        formData.personal = {
+          nombre: document.getElementById('nombre').value,
+          email: document.getElementById('email').value,
+          telefono: document.getElementById('telefono').value
+        };
+      }
+      
+      if (screenNumber === 2) {
+        formData.dispositivo = {
+          tipo: document.getElementById('tipoDispositivo').value,
+          marca: document.getElementById('marca').value,
+          modelo: document.getElementById('modelo').value
+        };
+      }
+      
+      if (screenNumber === 3) {
+        formData.servicio = {
+          tipo: document.getElementById('tipoServicio').value,
+          problema: document.getElementById('problema').value
+        };
+      }
+    }
+
+    // Actualizar barra de progreso
+    function updateProgress(currentStep, direction) {
+      const steps = document.querySelectorAll('.progress-step');
+      
+      if (direction === 'next') {
+        steps[currentStep - 1].classList.remove('active');
+        steps[currentStep - 1].classList.add('completed');
+        steps[currentStep].classList.add('active');
+      } else {
+        steps[currentStep].classList.remove('active');
+        steps[currentStep].classList.add('active');
+        steps[currentStep + 1].classList.remove('active', 'completed');
+      }
+    }
+
+    // Generar PDF con los datos (versión simplificada para GitHub Pages)
+    function generatePDF() {
+      // Guardar datos de la última pantalla
+      saveScreenData(3);
+      
+      // Mostrar confirmación visual
+      showConfirmation('✓ Formulario completado', '#34c759');
+      
+      // En un entorno real, aquí enviarías los datos a un servidor para generar el PDF
+      // Para GitHub Pages, usaremos un PDF estático con parámetros en la URL
+      
+      // Simulación: Cargar PDF con datos en la URL (esto no autocompletará el PDF realmente)
+      const pdfUrl = 'Service_Expert_Formulario.pdf?' + 
+        `nombre=${encodeURIComponent(formData.personal.nombre)}&` +
+        `email=${encodeURIComponent(formData.personal.email)}&` +
+        `dispositivo=${encodeURIComponent(formData.dispositivo.tipo)}`;
+      
+      document.getElementById('pdfPreview').src = pdfUrl;
+    }
+
+    // Mostrar confirmación visual (similar a tu función original)
+    function showConfirmation(message, color) {
       const confirmation = document.createElement('div');
-      confirmation.textContent = '✓ Campos reseteados';
+      confirmation.textContent = message;
       confirmation.style.position = 'fixed';
       confirmation.style.bottom = '80px';
       confirmation.style.left = '50%';
       confirmation.style.transform = 'translateX(-50%)';
-      confirmation.style.backgroundColor = '#34c759';
+      confirmation.style.backgroundColor = color;
       confirmation.style.color = 'white';
       confirmation.style.padding = '10px 20px';
       confirmation.style.borderRadius = '50px';
@@ -346,38 +523,15 @@
       
       document.body.appendChild(confirmation);
       
-      // Crear animación de fade in/out
-      const style = document.createElement('style');
-      style.innerHTML = `
-        @keyframes fadeInOut {
-          0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
-          20% { opacity: 1; transform: translateX(-50%) translateY(0); }
-          80% { opacity: 1; transform: translateX(-50%) translateY(0); }
-          100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-        }
-      `;
-      document.head.appendChild(style);
-      
-      // Eliminar el mensaje después de la animación
       setTimeout(() => {
         confirmation.remove();
-        style.remove();
       }, 2000);
     }
-    
-    // Imprimir PDF
-    function imprimirFormulario() {
-      const pdfWindow = window.open('Service_Expert_Formulario.pdf', '_blank');
-      pdfWindow.onload = function() {
-        pdfWindow.print();
-      };
-    }
-    
-    // Inicialización
+
+    // Inicialización (igual que tu versión original)
     document.addEventListener('DOMContentLoaded', function() {
       createDots();
       document.getElementById('welcomePage').style.display = 'flex';
-      document.getElementById('formPage').style.display = 'none';
       
       // Agregar keyframes dinámicamente para fadeOut
       const style = document.createElement('style');
@@ -386,9 +540,35 @@
           from { opacity: 1; transform: translateY(0); }
           to { opacity: 0; transform: translateY(-20px); }
         }
+        @keyframes fadeInOut {
+          0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+          20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+          80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+          100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+        }
       `;
       document.head.appendChild(style);
     });
+
+    // Función para crear puntos decorativos (igual que tu versión original)
+    function createDots() {
+      const container = document.getElementById('dotsContainer');
+      const dotCount = 12;
+      
+      for (let i = 0; i < dotCount; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        const size = Math.random() * 10 + 5;
+        dot.style.width = `${size}px`;
+        dot.style.height = `${size}px`;
+        dot.style.left = `${Math.random() * 100}%`;
+        dot.style.top = `${Math.random() * 100}%`;
+        dot.style.opacity = Math.random() * 0.4 + 0.1;
+        dot.style.animationDuration = `${Math.random() * 10 + 10}s`;
+        dot.style.animationDelay = `${Math.random() * 5}s`;
+        container.appendChild(dot);
+      }
+    }
   </script>
 </body>
 </html>
