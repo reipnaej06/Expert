@@ -44,7 +44,7 @@
       height: 100vh;
       object-fit: cover;
       z-index: -1;
-      opacity: 0.08;
+      opacity: 0.15;
     }
 
     /* Pantalla de Bienvenida */
@@ -114,11 +114,13 @@
       opacity: 0;
       transform: translateY(20px);
       transition: var(--transition);
+      display: none;
     }
 
     .form-container.visible {
       opacity: 1;
       transform: translateY(0);
+      display: block;
     }
 
     /* Pasos del formulario */
@@ -207,6 +209,7 @@
       font-weight: 500;
       border-radius: var(--border-radius);
       transition: var(--transition);
+      cursor: pointer;
     }
 
     .back-button {
@@ -239,6 +242,31 @@
       border-radius: var(--border-radius);
       border: 1px solid #e0e0e0;
       box-shadow: var(--box-shadow);
+    }
+
+    .pdf-actions {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .print-button {
+      padding: 12px 30px;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+      background-color: #34a853;
+      color: white;
+      border: none;
+      display: none;
+    }
+
+    .print-button:hover {
+      background-color: #2d9249;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(52, 168, 83, 0.3);
     }
 
     /* Animaciones */
@@ -274,6 +302,11 @@
       .nav-button {
         width: 100%;
         margin-bottom: 10px;
+      }
+      
+      .pdf-actions {
+        flex-direction: column;
+        gap: 10px;
       }
     }
   </style>
@@ -424,19 +457,15 @@
         <p>Haz clic en el botón para generar el PDF con todos los datos ingresados.</p>
         <button type="button" class="nav-button next-button" onclick="generarPDF()" style="margin-top: 20px;">Generar PDF</button>
         <iframe id="pdfPreview"></iframe>
+        <div class="pdf-actions">
+          <button type="button" class="nav-button back-button" onclick="nextStep(-1)">Atrás para corregir</button>
+          <button type="button" class="print-button" id="print-button" onclick="imprimirPDF()">Imprimir</button>
+        </div>
       </div>
     </form>
   </div>
 
   <script>
-    // Mostrar pantalla de bienvenida al cargar
-    document.addEventListener('DOMContentLoaded', function() {
-      setTimeout(() => {
-        document.getElementById('welcome-screen').classList.add('hidden');
-        document.getElementById('form-container').classList.add('visible');
-      }, 2000);
-    });
-
     // Función para comenzar el formulario
     document.getElementById('start-button').addEventListener('click', function() {
       document.getElementById('welcome-screen').classList.add('hidden');
@@ -495,10 +524,18 @@
       const url = URL.createObjectURL(blob);
       document.getElementById("pdfPreview").src = url;
       
+      // Mostrar botón de imprimir
+      document.getElementById("print-button").style.display = "block";
+      
       // Desplazamiento suave al preview del PDF
       setTimeout(() => {
         document.getElementById("pdfPreview").scrollIntoView({ behavior: 'smooth' });
       }, 500);
+    }
+
+    function imprimirPDF() {
+      const pdfPreview = document.getElementById('pdfPreview');
+      pdfPreview.contentWindow.print();
     }
   </script>
 </body>
