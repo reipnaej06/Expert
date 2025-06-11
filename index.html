@@ -3,19 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Formulario Multietapa - Service Expert</title>
+  <title>Expert iPoint - Service Expert</title>
   <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary-color: #0071e3;
+      --primary-hover: #0077ed;
+      --background-dark: #1a1a1a;
+      --background-light: #f5f5f7;
+      --text-dark: #1d1d1f;
+      --text-light: #f5f5f7;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: transparent;
-      color: white;
+      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--background-light);
+      color: var(--text-dark);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
     }
 
     #bgVideo {
@@ -26,51 +44,10 @@
       height: 100vh;
       object-fit: cover;
       z-index: -1;
+      opacity: 0.08;
     }
 
-    .step {
-      display: none;
-      padding: 20px;
-      max-width: 800px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-      background: rgba(0, 0, 0, 0.6);
-      border-radius: 10px;
-    }
-
-    .step.active {
-      display: block;
-    }
-
-    .navigation {
-      text-align: center;
-      margin-top: 20px;
-      position: relative;
-      z-index: 1;
-    }
-
-    button {
-      margin: 5px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      background-color: #0071e3;
-      color: white;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    input, select, textarea {
-      display: block;
-      margin-bottom: 10px;
-      width: 100%;
-      padding: 8px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-
-    /* Estilos para la pantalla de bienvenida */
+    /* Pantalla de Bienvenida */
     #welcome-screen {
       position: fixed;
       top: 0;
@@ -81,31 +58,223 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 10;
+      background-color: rgba(255, 255, 255, 0.95);
+      z-index: 100;
+      transition: var(--transition);
+    }
+
+    #welcome-screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-20px);
     }
 
     #welcome-screen h1 {
-      font-size: 3rem;
-      margin-bottom: 2rem;
+      font-size: 2.8rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
       text-align: center;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      color: var(--text-dark);
+      background: linear-gradient(45deg, #0071e3, #2997ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s 0.2s forwards;
     }
 
     #start-button {
-      padding: 15px 40px;
-      font-size: 1.2rem;
-      background-color: #0071e3;
+      padding: 15px 50px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      background-color: var(--primary-color);
+      color: white;
       border: none;
       border-radius: 30px;
-      color: white;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: var(--transition);
+      box-shadow: 0 4px 14px rgba(0, 113, 227, 0.3);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s 0.4s forwards;
     }
 
     #start-button:hover {
-      background-color: #0060c0;
-      transform: scale(1.05);
+      background-color: var(--primary-hover);
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 20px rgba(0, 113, 227, 0.4);
+    }
+
+    /* Contenedor principal del formulario */
+    .form-container {
+      max-width: 680px;
+      width: 90%;
+      margin: 40px auto;
+      padding: 0 20px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: var(--transition);
+    }
+
+    .form-container.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Pasos del formulario */
+    .step {
+      display: none;
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: var(--box-shadow);
+      transform: translateY(10px);
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .step.active {
+      display: block;
+      animation: fadeInUp 0.6s forwards;
+    }
+
+    .step h2 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 25px;
+      color: var(--text-dark);
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .step h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary-color), #2997ff);
+      border-radius: 3px;
+    }
+
+    /* Elementos del formulario */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 1rem;
+      font-family: 'SF Pro Display', sans-serif;
+      border: 1px solid #d2d2d7;
+      border-radius: var(--border-radius);
+      background-color: rgba(255, 255, 255, 0.8);
+      transition: var(--transition);
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.2);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      background-size: 16px;
+    }
+
+    /* Navegación */
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .nav-button {
+      padding: 12px 30px;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+    }
+
+    .back-button {
+      background-color: transparent;
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+    }
+
+    .back-button:hover {
+      background-color: rgba(0, 113, 227, 0.1);
+    }
+
+    .next-button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+    }
+
+    .next-button:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 113, 227, 0.3);
+    }
+
+    /* PDF Preview */
+    #pdfPreview {
+      width: 100%;
+      height: 500px;
+      margin-top: 30px;
+      border-radius: var(--border-radius);
+      border: 1px solid #e0e0e0;
+      box-shadow: var(--box-shadow);
+    }
+
+    /* Animaciones */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      #welcome-screen h1 {
+        font-size: 2.2rem;
+      }
+
+      .step {
+        padding: 25px 20px;
+      }
+
+      .step h2 {
+        font-size: 1.5rem;
+      }
+
+      .navigation {
+        flex-direction: column;
+      }
+
+      .nav-button {
+        width: 100%;
+        margin-bottom: 10px;
+      }
     }
   </style>
 </head>
@@ -121,102 +290,187 @@
     <button id="start-button">Comenzar</button>
   </div>
 
-  <form id="multiStepForm" style="display: none;">
-    <!-- Etapa 1 -->
-    <div class="step active" id="step-1">
-      <h2>1. Información de contacto</h2>
-      <input name="nombre" placeholder="Nombre" required />
-      <input name="apellido" placeholder="Apellido" required />
-      <input name="dni" placeholder="DNI" required />
-      <input name="telefono" placeholder="Teléfono" required />
-      <input name="correo" placeholder="Correo o Apple ID" required />
-      <input name="direccion" placeholder="Dirección" />
-      <input name="autorizado" placeholder="Autorizado para retirar" />
-    </div>
+  <!-- Contenedor del Formulario -->
+  <div class="form-container" id="form-container">
+    <form id="multiStepForm">
+      <!-- Etapa 1 -->
+      <div class="step active" id="step-1">
+        <h2>Información de contacto</h2>
+        <div class="form-group">
+          <input name="nombre" placeholder="Nombre" required />
+        </div>
+        <div class="form-group">
+          <input name="apellido" placeholder="Apellido" required />
+        </div>
+        <div class="form-group">
+          <input name="dni" placeholder="DNI" required />
+        </div>
+        <div class="form-group">
+          <input name="telefono" placeholder="Teléfono" required />
+        </div>
+        <div class="form-group">
+          <input name="correo" placeholder="Correo o Apple ID" required />
+        </div>
+        <div class="form-group">
+          <input name="direccion" placeholder="Dirección" />
+        </div>
+        <div class="form-group">
+          <input name="autorizado" placeholder="Autorizado para retirar" />
+        </div>
 
-    <!-- Etapa 2 -->
-    <div class="step" id="step-2">
-      <h2>2. Dispositivo a configurar</h2>
-      <input name="servicio" placeholder="Servicio a realizar" />
-      <input name="modelo" placeholder="Modelo del dispositivo" />
-      <input name="serie" placeholder="Número de serie" />
-      <input name="imei" placeholder="Número de IMEI" />
-      <textarea name="condiciones" placeholder="Condiciones del equipo"></textarea>
-      <textarea name="accesorios" placeholder="Detalles/accesorios"></textarea>
-      <select name="passApple">
-        <option>¿Posee contraseña Apple ID?</option>
-        <option>Sí</option>
-        <option>No</option>
-      </select>
-      <select name="passWhatsapp">
-        <option>¿Posee contraseña WhatsApp?</option>
-        <option>Sí</option>
-        <option>No</option>
-      </select>
-      <select name="icloud">
-        <option>¿Posee respaldo iCloud?</option>
-        <option>Sí</option>
-        <option>No</option>
-      </select>
-      <select name="whatsappBackup">
-        <option>¿Posee respaldo WhatsApp?</option>
-        <option>Sí</option>
-        <option>No</option>
-      </select>
-    </div>
+        <div class="navigation">
+          <button type="button" class="nav-button back-button" onclick="nextStep(-1)">Atrás</button>
+          <button type="button" class="nav-button next-button" onclick="nextStep(1)">Siguiente</button>
+        </div>
+      </div>
 
-    <!-- Etapa 3 -->
-    <div class="step" id="step-3">
-      <h2>3. Dispositivo para traspaso</h2>
-      <input name="modeloTraspaso" placeholder="Modelo del dispositivo de respaldo" />
-      <input name="serialTraspaso" placeholder="Serial/IMEI del dispositivo de respaldo" />
-      <textarea name="datosExtra" placeholder="Datos extra de configuración"></textarea>
-    </div>
+      <!-- Etapa 2 -->
+      <div class="step" id="step-2">
+        <h2>Dispositivo a configurar</h2>
+        <div class="form-group">
+          <input name="servicio" placeholder="Servicio a realizar" />
+        </div>
+        <div class="form-group">
+          <input name="modelo" placeholder="Modelo del dispositivo" />
+        </div>
+        <div class="form-group">
+          <input name="serie" placeholder="Número de serie" />
+        </div>
+        <div class="form-group">
+          <input name="imei" placeholder="Número de IMEI" />
+        </div>
+        <div class="form-group">
+          <textarea name="condiciones" placeholder="Condiciones del equipo"></textarea>
+        </div>
+        <div class="form-group">
+          <textarea name="accesorios" placeholder="Detalles/accesorios"></textarea>
+        </div>
+        <div class="form-group">
+          <select name="passApple">
+            <option>¿Posee contraseña Apple ID?</option>
+            <option>Sí</option>
+            <option>No</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <select name="passWhatsapp">
+            <option>¿Posee contraseña WhatsApp?</option>
+            <option>Sí</option>
+            <option>No</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <select name="icloud">
+            <option>¿Posee respaldo iCloud?</option>
+            <option>Sí</option>
+            <option>No</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <select name="whatsappBackup">
+            <option>¿Posee respaldo WhatsApp?</option>
+            <option>Sí</option>
+            <option>No</option>
+          </select>
+        </div>
 
-    <!-- Etapa 4 -->
-    <div class="step" id="step-4">
-      <h2>4. Servicio final</h2>
-      <input name="valor" placeholder="Valor del servicio" />
-      <input name="asesor" placeholder="Nombre del asesor" />
-      <input name="firma" placeholder="Firma del cliente" />
-    </div>
+        <div class="navigation">
+          <button type="button" class="nav-button back-button" onclick="nextStep(-1)">Atrás</button>
+          <button type="button" class="nav-button next-button" onclick="nextStep(1)">Siguiente</button>
+        </div>
+      </div>
 
-    <!-- Etapa 5 -->
-    <div class="step" id="step-5">
-      <h2>5. Generar PDF</h2>
-      <p>Haz clic en el botón para generar el PDF con todos los datos ingresados.</p>
-      <button type="button" onclick="generarPDF()">Generar PDF</button>
-      <iframe id="pdfPreview" style="width:100%; height:500px; margin-top: 20px;"></iframe>
-    </div>
+      <!-- Etapa 3 -->
+      <div class="step" id="step-3">
+        <h2>Dispositivo para traspaso</h2>
+        <div class="form-group">
+          <input name="modeloTraspaso" placeholder="Modelo del dispositivo de respaldo" />
+        </div>
+        <div class="form-group">
+          <input name="serialTraspaso" placeholder="Serial/IMEI del dispositivo de respaldo" />
+        </div>
+        <div class="form-group">
+          <textarea name="datosExtra" placeholder="Datos extra de configuración"></textarea>
+        </div>
 
-    <div class="navigation">
-      <button type="button" onclick="nextStep(-1)">Atrás</button>
-      <button type="button" onclick="nextStep(1)">Siguiente</button>
-    </div>
-  </form>
+        <div class="navigation">
+          <button type="button" class="nav-button back-button" onclick="nextStep(-1)">Atrás</button>
+          <button type="button" class="nav-button next-button" onclick="nextStep(1)">Siguiente</button>
+        </div>
+      </div>
+
+      <!-- Etapa 4 -->
+      <div class="step" id="step-4">
+        <h2>Servicio final</h2>
+        <div class="form-group">
+          <input name="valor" placeholder="Valor del servicio" />
+        </div>
+        <div class="form-group">
+          <input name="asesor" placeholder="Nombre del asesor" />
+        </div>
+        <div class="form-group">
+          <input name="firma" placeholder="Firma del cliente" />
+        </div>
+
+        <div class="navigation">
+          <button type="button" class="nav-button back-button" onclick="nextStep(-1)">Atrás</button>
+          <button type="button" class="nav-button next-button" onclick="nextStep(1)">Siguiente</button>
+        </div>
+      </div>
+
+      <!-- Etapa 5 -->
+      <div class="step" id="step-5">
+        <h2>Generar PDF</h2>
+        <p>Haz clic en el botón para generar el PDF con todos los datos ingresados.</p>
+        <button type="button" class="nav-button next-button" onclick="generarPDF()" style="margin-top: 20px;">Generar PDF</button>
+        <iframe id="pdfPreview"></iframe>
+      </div>
+    </form>
+  </div>
 
   <script>
     // Mostrar pantalla de bienvenida al cargar
     document.addEventListener('DOMContentLoaded', function() {
-      document.getElementById('welcome-screen').style.display = 'flex';
-      document.getElementById('multiStepForm').style.display = 'none';
+      setTimeout(() => {
+        document.getElementById('welcome-screen').classList.add('hidden');
+        document.getElementById('form-container').classList.add('visible');
+      }, 2000);
     });
 
     // Función para comenzar el formulario
     document.getElementById('start-button').addEventListener('click', function() {
-      document.getElementById('welcome-screen').style.display = 'none';
-      document.getElementById('multiStepForm').style.display = 'block';
+      document.getElementById('welcome-screen').classList.add('hidden');
+      setTimeout(() => {
+        document.getElementById('form-container').classList.add('visible');
+      }, 400);
     });
 
     let currentStep = 0;
     const steps = document.querySelectorAll(".step");
 
     function nextStep(n) {
-      steps[currentStep].classList.remove("active");
-      currentStep += n;
-      if (currentStep >= steps.length) currentStep = steps.length - 1;
-      if (currentStep < 0) currentStep = 0;
-      steps[currentStep].classList.add("active");
+      // Animación de salida para el paso actual
+      steps[currentStep].style.opacity = '0';
+      steps[currentStep].style.transform = 'translateY(10px)';
+      
+      setTimeout(() => {
+        steps[currentStep].classList.remove("active");
+        currentStep += n;
+        
+        if (currentStep >= steps.length) currentStep = steps.length - 1;
+        if (currentStep < 0) currentStep = 0;
+        
+        steps[currentStep].classList.add("active");
+        
+        // Animación de entrada para el nuevo paso
+        setTimeout(() => {
+          steps[currentStep].style.opacity = '1';
+          steps[currentStep].style.transform = 'translateY(0)';
+        }, 10);
+        
+        // Desplazamiento suave al inicio del formulario
+        document.getElementById('form-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
     }
 
     async function generarPDF() {
@@ -240,6 +494,11 @@
       const blob = new Blob([pdfBytes], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
       document.getElementById("pdfPreview").src = url;
+      
+      // Desplazamiento suave al preview del PDF
+      setTimeout(() => {
+        document.getElementById("pdfPreview").scrollIntoView({ behavior: 'smooth' });
+      }, 500);
     }
   </script>
 </body>
