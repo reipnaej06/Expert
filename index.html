@@ -125,16 +125,11 @@
       const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
       const formPdf = pdfDoc.getForm();
 
+      formPdf.updateFieldAppearances();  // ← NECESARIO para que se muestren los textos
+
       try {
-        formPdf.getTextField('nombre').setText(data.nombre);
-        formPdf.getTextField('apellido').setText(data.apellido);
-        formPdf.getTextField('dni').setText(data.dni);
-        formPdf.getTextField('telefono').setText(data.telefono);
-        formPdf.getTextField('correo').setText(data.correo);
-        formPdf.getTextField('direccion').setText(data.direccion);
-        formPdf.getTextField('autorizado').setText(data.autorizado);
-        formPdf.getTextField('Text45').setText(data.valor);
-        // Más campos pueden agregarse aquí
+        formPdf.getTextField('Text45').setText(data.valor);  // ← Valor del servicio
+        // Aquí podés seguir agregando el resto de campos
       } catch (e) {
         alert("Algunos campos no fueron encontrados en el PDF.");
         console.error(e);
