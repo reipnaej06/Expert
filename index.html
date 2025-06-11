@@ -2,29 +2,55 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Formulario Multietapa - Service Expert</title>
   <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: Arial, sans-serif;
-      margin: 0; padding: 0;
-      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      color: white;
     }
+
+    #bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -1;
+    }
+
     .step {
       display: none;
       padding: 20px;
       max-width: 800px;
       margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
     }
+
     .step.active {
       display: block;
     }
+
     .navigation {
       text-align: center;
       margin-top: 20px;
+      position: relative;
+      z-index: 1;
     }
+
     button {
       margin: 5px;
       padding: 10px 20px;
@@ -35,6 +61,7 @@
       cursor: pointer;
       font-weight: bold;
     }
+
     input, select, textarea {
       display: block;
       margin-bottom: 10px;
@@ -47,48 +74,68 @@
 </head>
 <body>
 
+  <video autoplay muted loop id="bgVideo">
+    <source src="fondo-tecnologico.mp4" type="video/mp4" />
+  </video>
+
   <form id="multiStepForm">
     <!-- Etapa 1 -->
     <div class="step active" id="step-1">
       <h2>1. Información de contacto</h2>
-      <input name="nombre" placeholder="Nombre" required>
-      <input name="apellido" placeholder="Apellido" required>
-      <input name="dni" placeholder="DNI" required>
-      <input name="telefono" placeholder="Teléfono" required>
-      <input name="correo" placeholder="Correo o Apple ID" required>
-      <input name="direccion" placeholder="Dirección">
-      <input name="autorizado" placeholder="Autorizado para retirar">
+      <input name="nombre" placeholder="Nombre" required />
+      <input name="apellido" placeholder="Apellido" required />
+      <input name="dni" placeholder="DNI" required />
+      <input name="telefono" placeholder="Teléfono" required />
+      <input name="correo" placeholder="Correo o Apple ID" required />
+      <input name="direccion" placeholder="Dirección" />
+      <input name="autorizado" placeholder="Autorizado para retirar" />
     </div>
 
     <!-- Etapa 2 -->
     <div class="step" id="step-2">
       <h2>2. Dispositivo a configurar</h2>
-      <input name="servicio" placeholder="Servicio a realizar">
-      <input name="modelo" placeholder="Modelo del dispositivo">
-      <input name="serie" placeholder="Número de serie">
-      <input name="imei" placeholder="Número de IMEI">
+      <input name="servicio" placeholder="Servicio a realizar" />
+      <input name="modelo" placeholder="Modelo del dispositivo" />
+      <input name="serie" placeholder="Número de serie" />
+      <input name="imei" placeholder="Número de IMEI" />
       <textarea name="condiciones" placeholder="Condiciones del equipo"></textarea>
       <textarea name="accesorios" placeholder="Detalles/accesorios"></textarea>
-      <select name="passApple"><option>¿Posee contraseña Apple ID?</option><option>Sí</option><option>No</option></select>
-      <select name="passWhatsapp"><option>¿Posee contraseña WhatsApp?</option><option>Sí</option><option>No</option></select>
-      <select name="icloud"><option>¿Posee respaldo iCloud?</option><option>Sí</option><option>No</option></select>
-      <select name="whatsappBackup"><option>¿Posee respaldo WhatsApp?</option><option>Sí</option><option>No</option></select>
+      <select name="passApple">
+        <option>¿Posee contraseña Apple ID?</option>
+        <option>Sí</option>
+        <option>No</option>
+      </select>
+      <select name="passWhatsapp">
+        <option>¿Posee contraseña WhatsApp?</option>
+        <option>Sí</option>
+        <option>No</option>
+      </select>
+      <select name="icloud">
+        <option>¿Posee respaldo iCloud?</option>
+        <option>Sí</option>
+        <option>No</option>
+      </select>
+      <select name="whatsappBackup">
+        <option>¿Posee respaldo WhatsApp?</option>
+        <option>Sí</option>
+        <option>No</option>
+      </select>
     </div>
 
     <!-- Etapa 3 -->
     <div class="step" id="step-3">
       <h2>3. Dispositivo para traspaso</h2>
-      <input name="modeloTraspaso" placeholder="Modelo del dispositivo de respaldo">
-      <input name="serialTraspaso" placeholder="Serial/IMEI del dispositivo de respaldo">
+      <input name="modeloTraspaso" placeholder="Modelo del dispositivo de respaldo" />
+      <input name="serialTraspaso" placeholder="Serial/IMEI del dispositivo de respaldo" />
       <textarea name="datosExtra" placeholder="Datos extra de configuración"></textarea>
     </div>
 
     <!-- Etapa 4 -->
     <div class="step" id="step-4">
       <h2>4. Servicio final</h2>
-      <input name="valor" placeholder="Valor del servicio">
-      <input name="asesor" placeholder="Nombre del asesor">
-      <input name="firma" placeholder="Firma del cliente">
+      <input name="valor" placeholder="Valor del servicio" />
+      <input name="asesor" placeholder="Nombre del asesor" />
+      <input name="firma" placeholder="Firma del cliente" />
     </div>
 
     <!-- Etapa 5 -->
@@ -124,12 +171,11 @@
       const existingPdfBytes = await fetch('Service_Expert_Formulario.pdf').then(res => res.arrayBuffer());
       const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
       const formPdf = pdfDoc.getForm();
-
-      formPdf.updateFieldAppearances();  // ← NECESARIO para que se muestren los textos
+      formPdf.updateFieldAppearances();
 
       try {
-        formPdf.getTextField('Text45').setText(data.valor);  // ← Valor del servicio
-        // Aquí podés seguir agregando el resto de campos
+        formPdf.getTextField('Text45').setText(data.valor); // Campo 'valor del servicio'
+        // Podés seguir agregando más campos aquí
       } catch (e) {
         alert("Algunos campos no fueron encontrados en el PDF.");
         console.error(e);
