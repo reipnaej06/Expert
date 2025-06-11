@@ -47,8 +47,8 @@
       opacity: 0.15;
     }
 
-    /* Pantalla de Bienvenida */
-    #welcome-screen {
+    /* Pantalla de Login */
+    #login-screen {
       position: fixed;
       top: 0;
       left: 0;
@@ -63,13 +63,13 @@
       transition: var(--transition);
     }
 
-    #welcome-screen.hidden {
+    #login-screen.hidden {
       opacity: 0;
       pointer-events: none;
       transform: translateY(-20px);
     }
 
-    #welcome-screen h1 {
+    #login-screen h1 {
       font-size: 2.8rem;
       font-weight: 600;
       margin-bottom: 1.5rem;
@@ -83,26 +83,71 @@
       animation: fadeInUp 0.8s 0.2s forwards;
     }
 
-    #start-button {
-      padding: 15px 50px;
-      font-size: 1.1rem;
-      font-weight: 500;
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: var(--transition);
-      box-shadow: 0 4px 14px rgba(0, 113, 227, 0.3);
+    .login-form {
+      width: 100%;
+      max-width: 350px;
+      padding: 20px;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
       opacity: 0;
       transform: translateY(20px);
       animation: fadeInUp 0.8s 0.4s forwards;
     }
 
-    #start-button:hover {
+    .form-group-login {
+      margin-bottom: 20px;
+    }
+
+    .form-group-login label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-group-login input {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 1rem;
+      font-family: 'SF Pro Display', sans-serif;
+      border: 1px solid #d2d2d7;
+      border-radius: var(--border-radius);
+      background-color: rgba(255, 255, 255, 0.8);
+      transition: var(--transition);
+    }
+
+    .form-group-login input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.2);
+    }
+
+    #login-button {
+      width: 100%;
+      padding: 15px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 4px 14px rgba(0, 113, 227, 0.3);
+    }
+
+    #login-button:hover {
       background-color: var(--primary-hover);
-      transform: translateY(-2px) scale(1.02);
+      transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(0, 113, 227, 0.4);
+    }
+
+    #error-message {
+      color: #ff3b30;
+      margin-top: 15px;
+      text-align: center;
+      font-size: 0.9rem;
+      display: none;
     }
 
     /* Contenedor principal del formulario */
@@ -283,8 +328,12 @@
 
     /* Responsive */
     @media (max-width: 768px) {
-      #welcome-screen h1 {
+      #login-screen h1 {
         font-size: 2.2rem;
+      }
+
+      .login-form {
+        max-width: 90%;
       }
 
       .step {
@@ -317,10 +366,21 @@
     <source src="fondo-tecnologico.mp4" type="video/mp4" />
   </video>
 
-  <!-- Pantalla de Bienvenida -->
-  <div id="welcome-screen">
-    <h1>Bienvenido a Expert iPoint</h1>
-    <button id="start-button">Comenzar</button>
+  <!-- Pantalla de Login -->
+  <div id="login-screen">
+    <h1>Expert iPoint</h1>
+    <div class="login-form">
+      <div class="form-group-login">
+        <label for="username">Usuario:</label>
+        <input type="text" id="username" placeholder="Ingrese su usuario" required>
+      </div>
+      <div class="form-group-login">
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" placeholder="Ingrese su contraseña" required>
+      </div>
+      <button id="login-button">Iniciar Sesión</button>
+      <div id="error-message">Usuario o contraseña incorrectos</div>
+    </div>
   </div>
 
   <!-- Contenedor del Formulario -->
@@ -466,12 +526,44 @@
   </div>
 
   <script>
-    // Función para comenzar el formulario
-    document.getElementById('start-button').addEventListener('click', function() {
-      document.getElementById('welcome-screen').classList.add('hidden');
-      setTimeout(() => {
-        document.getElementById('form-container').classList.add('visible');
-      }, 400);
+    // Función para validar el login
+    document.getElementById('login-button').addEventListener('click', function() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errorMessage = document.getElementById('error-message');
+      
+      // Credenciales válidas
+      const validUsername = 'iPoint';
+      const validPassword = 'iPoint';
+      
+      if (username === validUsername && password === validPassword) {
+        // Credenciales correctas
+        document.getElementById('login-screen').classList.add('hidden');
+        setTimeout(() => {
+          document.getElementById('form-container').classList.add('visible');
+        }, 400);
+      } else {
+        // Credenciales incorrectas
+        errorMessage.style.display = 'block';
+        document.getElementById('username').style.borderColor = '#ff3b30';
+        document.getElementById('password').style.borderColor = '#ff3b30';
+        
+        // Limpiar campos
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        
+        // Enfocar en el campo de usuario
+        setTimeout(() => {
+          document.getElementById('username').focus();
+        }, 100);
+      }
+    });
+
+    // Permitir también el login con Enter
+    document.getElementById('password').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        document.getElementById('login-button').click();
+      }
     });
 
     let currentStep = 0;
